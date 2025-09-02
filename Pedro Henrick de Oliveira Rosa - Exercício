@@ -1,0 +1,296 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: mysql
+-- Tempo de geração: 02/09/2025 às 00:39
+-- Versão do servidor: 8.0.43
+-- Versão do PHP: 8.2.29
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Banco de dados: `pedro_en_db`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `questionnaires`
+--
+
+CREATE TABLE `questionnaires` (
+  `id` int NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `description` varchar(50) NOT NULL,
+  `duration_minutes` int NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `deleted_at` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `questions`
+--
+
+CREATE TABLE `questions` (
+  `id` int NOT NULL,
+  `questionnaire_id` int NOT NULL,
+  `enunciation` int NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `deleted_at` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `question_options`
+--
+
+CREATE TABLE `question_options` (
+  `id` int NOT NULL,
+  `question_id` int NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `is_correct` tinyint(1) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `deleted_at` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `roles`
+--
+
+CREATE TABLE `roles` (
+  `id` int NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `deleted_at` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `users`
+--
+
+CREATE TABLE `users` (
+  ` id` int NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `suap_id` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `deleted_at` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `user_answer_histories`
+--
+
+CREATE TABLE `user_answer_histories` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `questionnaire_id` int NOT NULL,
+  `question_id` int NOT NULL,
+  `selected_option_id` int NOT NULL,
+  `is_correct` tinyint(1) NOT NULL,
+  `answered_at` timestamp NOT NULL,
+  `question_snapshot` text NOT NULL,
+  `created_at` int NOT NULL,
+  `deleted_at` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `user_results`
+--
+
+CREATE TABLE `user_results` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `questionnaire_id` int NOT NULL,
+  `correct_answers` int NOT NULL,
+  `total_questions` int NOT NULL,
+  `score` decimal(10,0) NOT NULL,
+  `submitted_at` timestamp NOT NULL,
+  ` created_at` timestamp NOT NULL,
+  `deleted_at` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `user_roles`
+--
+
+CREATE TABLE `user_roles` (
+  `user_id` int NOT NULL,
+  `role_id` int NOT NULL,
+  `created_at` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Índices para tabelas despejadas
+--
+
+--
+-- Índices de tabela `questionnaires`
+--
+ALTER TABLE `questionnaires`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices de tabela `questions`
+--
+ALTER TABLE `questions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `questionnaire_id` (`questionnaire_id`);
+
+--
+-- Índices de tabela `question_options`
+--
+ALTER TABLE `question_options`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `question_id` (`question_id`);
+
+--
+-- Índices de tabela `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices de tabela `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (` id`);
+
+--
+-- Índices de tabela `user_answer_histories`
+--
+ALTER TABLE `user_answer_histories`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `questionnaire_id` (`questionnaire_id`),
+  ADD KEY `selected_option_id` (`selected_option_id`),
+  ADD KEY `question_id` (`question_id`);
+
+--
+-- Índices de tabela `user_results`
+--
+ALTER TABLE `user_results`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `questionnaire_id` (`questionnaire_id`);
+
+--
+-- Índices de tabela `user_roles`
+--
+ALTER TABLE `user_roles`
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `role_id` (`role_id`);
+
+--
+-- AUTO_INCREMENT para tabelas despejadas
+--
+
+--
+-- AUTO_INCREMENT de tabela `questionnaires`
+--
+ALTER TABLE `questionnaires`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `questions`
+--
+ALTER TABLE `questions`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `question_options`
+--
+ALTER TABLE `question_options`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `users`
+--
+ALTER TABLE `users`
+  MODIFY ` id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `user_answer_histories`
+--
+ALTER TABLE `user_answer_histories`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `user_results`
+--
+ALTER TABLE `user_results`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- Restrições para tabelas despejadas
+--
+
+--
+-- Restrições para tabelas `questions`
+--
+ALTER TABLE `questions`
+  ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaires` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Restrições para tabelas `question_options`
+--
+ALTER TABLE `question_options`
+  ADD CONSTRAINT `question_options_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Restrições para tabelas `user_answer_histories`
+--
+ALTER TABLE `user_answer_histories`
+  ADD CONSTRAINT `question_id` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `questionnaire_id` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaires` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `selected_option_id` FOREIGN KEY (`selected_option_id`) REFERENCES `question_options` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Restrições para tabelas `user_results`
+--
+ALTER TABLE `user_results`
+  ADD CONSTRAINT `user_results_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `user_results_ibfk_2` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaires` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Restrições para tabelas `user_roles`
+--
+ALTER TABLE `user_roles`
+  ADD CONSTRAINT `user_roles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
